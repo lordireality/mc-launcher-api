@@ -38,7 +38,7 @@ class SkinController extends Controller
             if(DB::table('player')->where([['email','=',$inputData["email"]], ['authtoken','=',$inputData["authtoken"]]])->exists()){
                 if (base64_encode(base64_decode($inputData["skinBase64"], true)) === $data){
                     if(str_contains("data:image/png;base64",$inputData["skinBase64"])){
-                        $imgsize_arr = getimagesize('data://'$inputData["skinBase64"]);
+                        $imgsize_arr = getimagesize('data://'.$inputData["skinBase64"]);
                         if(($imgsize_arr->width/$imgsize_arr->height) == 1){
                             DB::table('player')->where([['email','=',$inputData["email"]], ['authtoken','=',$inputData["authtoken"]]])->update(["skin_hash"=>$inputData["skinBase64"]]);
                             return response() -> json(["state"=>"success","status" => "200","message"=>["Скин успешно обновлен!"]],200);
