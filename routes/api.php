@@ -20,7 +20,7 @@ Route::get('/launcher/ping',[App\Http\Controllers\LauncherController::class,'Pin
 /*Получить скин игрока */
 Route::get('/launcher/skin/{playername}.png',[App\Http\Controllers\SkinController::class,'FetchSkin']);
 /*Самостоятельная установка скина самому себе */
-
+Route::post('/launcher/skin/UploadSkin/',[App\Http\Controllers\SkinController::class,'UploadSkin']);
 
 /*Авторизация */
 /*OAuth провайдер для авторизации по гуглу, вк, яндексу и т.п. */
