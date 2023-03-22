@@ -31,8 +31,11 @@ Route::post('/launcher/auth/localRegister',[App\Http\Controllers\UserController:
 /*Авторизация по локальным параметрам */
 Route::post('/launcher/auth/localLogin',[App\Http\Controllers\UserController::class,'Login']);
 /*Получить данные пользователя по сессии */
-Route::post('/launcher/auth/FetchUserDataByAuth',[App\Http\Controllers\UserController::class,'FetchUserDataByAuth']);
+Route::post('/launcher/auth/fetchUserDataByAuth',[App\Http\Controllers\UserController::class,'FetchUserDataByAuth']);
 /*Получить данные пользователя по видимым данным  ? 'id','playername','email' */
-Route::post('/launcher/auth/FetchUserDataByVisibleData',[App\Http\Controllers\UserController::class,'FetchUserDataByVisibleData']);
+Route::post('/launcher/auth/fetchUserDataByVisibleData',[App\Http\Controllers\UserController::class,'FetchUserDataByVisibleData']);
 /* KeepAlive - проверка валидности сессии пользователя*/
-Route::post('/launcher/auth/KeepAlive',[App\Http\Controllers\UserController::class,'KeepAlive']);
+Route::post('/launcher/auth/keepAlive',[App\Http\Controllers\UserController::class,'KeepAlive']);
+
+/* GetGameVersions - получить версии игры*/
+Route::get('/launcher/game/getGameVersions',[App\Http\Controllers\LauncherController::class,'GetGameVersions']);
