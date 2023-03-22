@@ -70,6 +70,10 @@ class UserController extends Controller
 
     }
     
+    function Test(){
+        return response() -> json(["state"=>"success","status" => "200","message"=>["API Works properly!"]],200);
+    }
+
     /*Дефолтная регистрация */
     /*сделать по человечески + подтверждение по Email (аналогично делал в reshupdd.ru) */
     function Register(Request $_REQUEST){

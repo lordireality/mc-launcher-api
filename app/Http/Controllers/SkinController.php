@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Validator;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class SkinController extends Controller
@@ -9,8 +11,8 @@ class SkinController extends Controller
     /*Возвращает скин игрока, либо дефолтный заданный в перемиенной $defskin */
     /*TODO: Вынести в отдельный конфиг defskin */
     function FetchSkin($playername = 'steve'){
-        if(DB::table('player')->where([['playername','=',$playername]])->exists()){
-            $fileDbRecord = DB::table('playername')->where([['playername','=',$playername]])->get()[0];
+        if(DB::table('player')->where([['playername','=',$playername],['skin_hash','<>','NULL']])->exists()){
+            $base64 = DB::table('playername')->where([['playername','=',$playername]])->get()[0]->skin_hash;
             $base64 = str_replace('data:image/png;base64,', '', $base64);
             $base64 = str_replace(' ', '+', $base64);
             $rawFile = base64_decode($base64);
