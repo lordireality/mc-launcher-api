@@ -32,12 +32,12 @@ class UserController extends Controller
     }
 
     /*Забирает данные по полученному коду послу авторизации гугл */
-    /*TODO: добавить в .env параметры конфигурации авторизации */
+    
     function GoogleUserDataProvider($code = null){      
         if(!is_null($code)){
             $params = [
-                'client_id'     => 'ИНДИФИКАТОР_КЛИЕНТА',
-                'client_secret' => 'СЕКРЕТ_КЛИЕНТА',
+                'client_id'     => config('app.OAuth_Google_ClientID'),
+                'client_secret' => config('app.OAuth_Google_SecretId'),
                 'redirect_uri'  => 'https://example.com/login_google.php', 
                 'grant_type'    => 'authorization_code',
                 'code'          => $code
@@ -64,7 +64,32 @@ class UserController extends Controller
             } else {
                 return null;
             }
+            //https://snipp.ru/php/oauth-google
         } else {
+            return null;
+        }
+
+    }
+    /*Забирает данные по полученному коду послу авторизации ВК */
+    function VKUserDataProvider($code = null){      
+        if(!is_null($code)){
+            $params = [
+                'client_id'     => config('app.OAuth_VK_ClientID'),
+                'client_secret' => config('app.OAuth_VK_SecretID'),
+                'redirect_uri'  => 'https://example.com/login_vk.php', 
+                'code'          => $code
+            ];	 
+            $ch = curl_init('https://oauth.vk.com/access_token?'.http_build_query($params));
+            $data = curl_exec($ch);
+            curl_close($ch);	
+            $data = json_decode($data, true);
+            if (!empty($data['access_token'])) {
+                return $data;
+            } else {
+                return null;
+            }
+            //https://oauth.vk.com/access_token
+        }else {
             return null;
         }
 
@@ -126,7 +151,7 @@ class UserController extends Controller
                 'id',
                 'playername',
                 'email'
-            ]
+            ];
             if(in_array($inputData["visibleDataType"], $possibleFieldsRule)){
                 if(DB::table('player')->where([['visibleDataType','=',$inputData["value"]]])->exists()){
                     $userdata = DB::table('player')->select('id','playername','email')->where([['visibleDataType','=',$inputData["value"]]])->get()[0];
