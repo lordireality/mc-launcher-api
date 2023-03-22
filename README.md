@@ -17,5 +17,5 @@ API Routes
 |        | GET|HEAD | sanctum/csrf-cookie                          |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show     | web        | 
 +--------+----------+----------------------------------------------+------+----------------------------------------------------------------+------------+
 ![image](https://user-images.githubusercontent.com/68060177/227020682-d6779dd8-47ef-4430-9413-fa5922af4e82.png)
-<hr>
+<hr/>
 ![image](https://user-images.githubusercontent.com/68060177/227020762-0db49903-b2e4-42cc-ad35-5f671651d636.png)
