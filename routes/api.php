@@ -39,3 +39,6 @@ Route::post('/launcher/auth/keepAlive',[App\Http\Controllers\UserController::cla
 
 /* GetGameVersions - получить версии игры*/
 Route::get('/launcher/game/getGameVersions',[App\Http\Controllers\LauncherController::class,'GetGameVersions']);
+
+/* Последние 10 новостей*/
+Route::get('/launcher/game/getNews',[App\Http\Controllers\LauncherController::class,'GetNews']);

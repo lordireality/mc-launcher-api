@@ -15,4 +15,7 @@ class LauncherController extends Controller
         //p.s. где data из таблицы - скорее всего ссылка на репозиторий с файлами игры.
         return response() -> json(["state"=>"success","status" => "200","data"=>DB::table('versions')->select('ver','last-updated-at','data')->get()],200);
     }
+    function GetNews(){
+        return response() -> json(["state"=>"success","status" => "200","data"=>DB::table('news')->get()],200);
+    }
 }
