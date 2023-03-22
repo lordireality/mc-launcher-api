@@ -25,7 +25,38 @@ class SkinController extends Controller
         }
     }
 
+    /*Загрузка скина владельцем */
     function UploadSkin(Request $request){
-        return null;
+        $inputData = $request->input();
+        $validRules = [
+           'email' => 'required|Email|max:256',
+           'authtoken' => 'required|max:256',
+           'skinBase64' => 'required'
+        ];
+        $validator = Validator::make($inputData,$validRules);
+        if($validator -> passes()){
+            if(DB::table('player')->where([['email','=',$inputData["email"]], ['authtoken','=',$inputData["authtoken"]]])->exists()){
+                if (base64_encode(base64_decode($inputData["skinBase64"], true)) === $data){
+                    if(str_contains("data:image/png;base64",$inputData["skinBase64"])){
+                        $imgsize_arr = getimagesize('data://'$inputData["skinBase64"]);
+                        if(($imgsize_arr->width/$imgsize_arr->height) == 1){
+                            DB::table('player')->where([['email','=',$inputData["email"]], ['authtoken','=',$inputData["authtoken"]]])->update(["skin_hash"=>$inputData["skinBase64"]]);
+                            return response() -> json(["state"=>"success","status" => "200","message"=>["Скин успешно обновлен!"]],200);
+                        } else {
+                            return response() -> json(["state"=>"failed","status" => "422","message"=>["Представленное изображение не имеет соотношение сторон 1:1"]],422);
+                        }
+
+                    } else {
+                        return response() -> json(["state"=>"failed","status" => "422","message"=>["Представленное BASE64 значение не является data:image/png"]],422);
+                    }
+                } else {
+                    return response() -> json(["state"=>"failed","status" => "422","message"=>["Невалидное значение BASE64 строки"]],422);
+                }
+
+                return response() -> json(["state"=>"success","status" => "200"],200); 
+            } else {
+                return response() -> json(["state"=>"failed","status" => "401","message"=>["Сессия устарела или не существует"]],401);
+            }
+        } else { return response() -> json(["state"=>"failed","status" => "422","message"=>$validator->messages()],422); }
     }
 }

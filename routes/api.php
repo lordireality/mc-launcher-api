@@ -17,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/launcher/ping',[App\Http\Controllers\LauncherController::class,'Ping']);
 
 /*Система скинов */
+/*Получить скин игрока */
 Route::get('/launcher/skin/{playername}.png',[App\Http\Controllers\SkinController::class,'FetchSkin']);
+/*Самостоятельная установка скина самому себе */
+
 
 /*Авторизация */
 /*OAuth провайдер для авторизации по гуглу, вк, яндексу и т.п. */
