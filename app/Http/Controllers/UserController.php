@@ -13,9 +13,9 @@ class UserController extends Controller
     /*p.s.: не тестировалось, без понятия, работает или нет. В теории должно. */
 
     /*Функция - вызова действий после авторизации по OAUTH */
-    function OAuth(Request $_REQUEST){
-        $referer = $_REQUEST->input('provider');
-        $code = $_REQUEST->input('code');
+    function OAuth(Request $request){
+        $referer = $request->input('provider');
+        $code = $request->input('code');
         if(is_null($provider) || is_null($code)){
             return response() -> json(["state"=>"failed","status" => "422","message"=>['Missing param code or provider!']],422);
         }
@@ -70,17 +70,14 @@ class UserController extends Controller
 
     }
     
-    function Test(){
-        return response() -> json(["state"=>"success","status" => "200","message"=>["API Works properly!"]],200);
-    }
-
+    
     /*Дефолтная регистрация */
     /*сделать по человечески + подтверждение по Email (аналогично делал в reshupdd.ru) */
-    function Register(Request $_REQUEST){
-
+    function Register(Request $request){
+        return null;
     }
     /*Дефолтная авторизация*/
-    function Login(Request $_REQUEST){
+    function Login(Request $request){
         $inputData = $request->input();
         $validRules = [
            'email' => 'required|Email|max:256',
@@ -99,7 +96,7 @@ class UserController extends Controller
         } else { return response() -> json(["state"=>"failed","status" => "422","message"=>$validator->messages()],422); }
     }
     /*Получение данных пользователя по сессии авторизации */
-    function FetchUserDataByAuth(Request $_REQUEST){
+    function FetchUserDataByAuth(Request $request){
         $inputData = $request->input();
         $validRules = [
            'email' => 'required|Email|max:256',
@@ -116,7 +113,7 @@ class UserController extends Controller
         } else { return response() -> json(["state"=>"failed","status" => "422","message"=>$validator->messages()],422); }
     }
     /*Получение данных пользователя по "доступным" данным */
-    function FetchUserDataByVisibleData(Request $_REQUEST){
+    function FetchUserDataByVisibleData(Request $request){
         $inputData = $request->input();
         $validRules = [
             'visibleDataType' => 'required|max:256',
@@ -145,7 +142,7 @@ class UserController extends Controller
         }
     }
     /*проверка актуальности сессии авторизации */
-    function KeepAlive(Request $_REQUEST){
+    function KeepAlive(Request $request){
         $inputData = $request->input();
         $validRules = [
            'email' => 'required|Email|max:256',
