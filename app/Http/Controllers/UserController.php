@@ -23,12 +23,13 @@ class UserController extends Controller
             /*Получение данных из провайдера - Google Auth*/
             case "google": $userinfo = $this->GoogleUserDataProvider($code);  /*тут потом сверка с БД, по Google, ID, если есть учетка, то кул, даем токен уже приложения, если нет учетки, создаем и даем токен */  break;
             /*Получение данных из провайдера - Yandex Auth*/
-            case "yandex": break;
+            case "yandex": $userinfo = $this->YandexUserDataProvider($code); break;
             /*Получение данных из провайдера - VKontakte Auth*/
-            case "vk": break;
+            case "vk": $userinfo = $this->VKUserDataProvider($code); break;
             /*Ошибка. Несуществующий провайдер авторизации*/
             default: return response() -> json(["state"=>"failed","status" => "422","message"=>['Unknown OAuth Provider!']],422);
         }
+        return null;
     }
 
     /*Забирает данные по полученному коду послу авторизации гугл */
@@ -94,7 +95,50 @@ class UserController extends Controller
         }
 
     }
-    
+    /*Забирает данные по полученному коду послу авторизации яндекса */
+    /*p.s. возвращает и работает примерно аналогично гуглу */
+    function YandexUserDataProvider($code = null){     
+        if (!empty($code)) {
+            // Отправляем код для получения токена (POST-запрос).
+            $params = array(
+                'grant_type'    => 'authorization_code',
+                'code'          => $code,
+                'client_id'     => config('app.OAuth_Yandex_ClientID'),
+                'client_secret' => config('app.OAuth_Yandex_SecretID'),
+            );
+            
+            $ch = curl_init('https://oauth.yandex.ru/token');
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params); 
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_HEADER, false);
+            $data = curl_exec($ch);
+            curl_close($ch);	
+                     
+            $data = json_decode($data, true);
+            if (!empty($data['access_token'])) {
+                // Токен получили, получаем данные пользователя.
+                $ch = curl_init('https://login.yandex.ru/info');
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, array('format' => 'json')); 
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: OAuth ' . $data['access_token']));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HEADER, false);
+                $info = curl_exec($ch);
+                curl_close($ch);
+         
+                $info = json_decode($info, true);
+                return $info;
+            } else {
+                return null;
+            }
+            //https://snipp.ru/php/oauth-yandex
+        } else {
+            return null;
+        }
+    }
     
     /*Дефолтная регистрация */
     function Register(Request $request){

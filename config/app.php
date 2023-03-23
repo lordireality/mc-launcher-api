@@ -16,8 +16,10 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
     'OAuth_VK_ClientID' => env('OAuth_VK_ClientID', 'ClientID'),
     'OAuth_VK_SecretID' => env('OAuth_VK_SecretID', 'SecretID'),
-    'OAuth_VK_ClientID' => env('OAuth_VK_ClientID', 'ClientID'),
+    'OAuth_Google_ClientID' => env('OAuth_Google_ClientID', 'ClientID'),
     'OAuth_Google_SecretId' => env('OAuth_Google_SecretId', 'SecretID'),
+    'OAuth_Yandex_ClientID' => env('OAuth_Yandex_ClientID', 'ClientID'),
+    'OAuth_Yandex_SecretId' => env('OAuth_Yandex_SecretId', 'SecretID'),
 
     /*
     |--------------------------------------------------------------------------
