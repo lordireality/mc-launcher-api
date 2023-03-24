@@ -150,27 +150,27 @@ class UserController extends Controller
         ];
         $validator = Validator::make($inputData,$validRules);
         if($validator -> passes()){
-            if(DB::table('player')->where([['playername'],'=',$inputData["playername"]])-exists()){
+            if(DB::table('player')->where([['playername','=',$inputData["playername"]]])->exists()){
                 return response() -> json(["state"=>"failed","status" => "422","message"=>['Указанный ник-нейм уже зарегистрирован!']],422);
             }
-            if(DB::table('player')->where([['email'],'=',$inputData["email"]])-exists()){
+            if(DB::table('player')->where([['email','=',$inputData["email"]]])->exists()){
                 return response() -> json(["state"=>"failed","status" => "422","message"=>['Указанный Email уже зарегистрирован!']],422);
             }
             $isPasswordStrong = true;
             $passwordValidationErrorMessage = [];
-            if(!preg_match('@[A-Z]@', $password)){
+            if(!preg_match('@[A-Z]@', $inputData["password"])){
                 $isPasswordStrong = false;
                 array_push($passwordValidationErrorMessage, "В пароле должен быть, хотя бы один символ заглавного регистра!");                
             }
-            if(!preg_match('@[a-z]@', $password)){
+            if(!preg_match('@[a-z]@', $inputData["password"])){
                 $isPasswordStrong = false;
                 array_push($passwordValidationErrorMessage, "В пароле должен быть, хотя бы один символ нижнего регистра!");                
             }
-            if(!preg_match('@[0-9]@', $password)){
+            if(!preg_match('@[0-9]@', $inputData["password"])){
                 $isPasswordStrong = false;
                 array_push($passwordValidationErrorMessage, "В пароле должно быть хотя бы одно число!");                
             }
-            if(strlen($password) < 6){
+            if(strlen($inputData["password"]) < 6){
                 $isPasswordStrong = false;
                 array_push($passwordValidationErrorMessage, "Пароль должен состоять минимум из 6 символов!");                
             }
@@ -179,7 +179,7 @@ class UserController extends Controller
             }
             $hashedPassword = hash('sha256',$inputData["password"].$inputData["email"]); //TODO: вынести паттерн хэширования пароля в .env
             $uid = DB::table('player')->insertgetid(['playername'=>$inputData["playername"], 'email'=>$inputData["email"],'def_passwordhash'=>$hashedPassword]);
-            return response() -> json(["state"=>"success","status" => "200","message"=>['Учетная запись создана!']],422);
+            return response() -> json(["state"=>"success","status" => "200","message"=>['Учетная запись создана!']],200);
         } else { return response() -> json(["state"=>"failed","status" => "422","message"=>$validator->messages()],422); }
     } 
     
@@ -235,8 +235,8 @@ class UserController extends Controller
                 'email'
             ];
             if(in_array($inputData["visibleDataType"], $possibleFieldsRule)){
-                if(DB::table('player')->where([['visibleDataType','=',$inputData["value"]]])->exists()){
-                    $userdata = DB::table('player')->select('id','playername','email')->where([['visibleDataType','=',$inputData["value"]]])->get()[0];
+                if(DB::table('player')->where([[$inputData["visibleDataType"],'=',$inputData["value"]]])->exists()){
+                    $userdata = DB::table('player')->select('id','playername','email')->where([[$inputData["visibleDataType"],'=',$inputData["value"]]])->get()[0];
                     return response() -> json(["state"=>"success","status" => "200","userdata"=>$userdata],200); 
                 } else {
                     return response() -> json(["state"=>"failed","status" => "401","data"=>null],401);

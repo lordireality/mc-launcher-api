@@ -56,7 +56,7 @@
                 var playername = document.getElementById("reg_playername").value;
                 var email = document.getElementById("reg_email").value;
                 var password = document.getElementById("reg_password").value;
-                response = JSON.parse(responseRaw);
+                
                 let params = [
                     {
                         "key" : "playername",
@@ -72,7 +72,10 @@
                     }
                 ];
                 var responseRaw = HTTPPost(window.location.origin+'/api/launcher/auth/localRegister',params,false);
+                
+                response = JSON.parse(responseRaw);
                 if(response.status == 200){
+                    console.log(response);
                     document.getElementById("reg_result").innerHTML = responseRaw;
                 } else {
                     console.log(response.message);
@@ -93,7 +96,7 @@
                         "value" : password
                     }
                 ];
-                var responseRaw = HTTPPost(window.location.origin+'api/launcher/auth/localLogin',params,false);
+                var responseRaw = HTTPPost(window.location.origin+'/api/launcher/auth/localLogin',params,false);
                 response = JSON.parse(responseRaw);
                 if(response.status == 200){
                     document.getElementById("auth_result").innerHTML = responseRaw;
@@ -114,7 +117,7 @@
                         "value" : authtoken
                     }
                 ];
-                var responseRaw = HTTPPost(window.location.origin+'api/launcher/auth/fetchUserDataByAuth',params,false);
+                var responseRaw = HTTPPost(window.location.origin+'/api/launcher/auth/fetchUserDataByAuth',params,false);
                 response = JSON.parse(responseRaw);
                 if(response.status == 200){
                     document.getElementById("dataAuth_result").innerHTML = responseRaw;
@@ -124,7 +127,7 @@
             }
             function test_fetchDataByVisible(){
                 var visibleDataType = document.getElementById("data_Visible_visibleDataType").value;
-                var value = document.getElementById("data_Visible_value").value;
+                var someval = document.getElementById("data_Visible_value").value;
                 let params = [
                     {
                         "key" : "visibleDataType",
@@ -132,10 +135,10 @@
                     },
                     {
                         "key" : "value",
-                        "value" : value
+                        "value" : someval
                     }
                 ];
-                var responseRaw = HTTPPost(window.location.origin+'api/launcher/auth/fetchUserDataByVisibleData',params,false);
+                var responseRaw = HTTPPost(window.location.origin+'/api/launcher/auth/fetchUserDataByVisibleData',params,false);
                 response = JSON.parse(responseRaw);
                 if(response.status == 200){
                     document.getElementById("visibleData_result").innerHTML = responseRaw;
@@ -156,7 +159,7 @@
                         "value" : authtoken
                     }
                 ];
-                var responseRaw = HTTPPost(window.location.origin+'api/launcher/auth/keepAlive',params,false);
+                var responseRaw = HTTPPost(window.location.origin+'/api/launcher/auth/keepAlive',params,false);
                 response = JSON.parse(responseRaw);
                 if(response.status == 200){
                     document.getElementById("keepAlive_result").innerHTML = responseRaw;
@@ -192,11 +195,11 @@
                         "value" : authtoken
                     },
                     {
-                        "key" : "authtoken",
-                        "value" : authtoken
+                        "key" : "skinBase64",
+                        "value" : skinBase64
                     }
                 ];
-                var responseRaw = HTTPPost(window.location.origin+'api/launcher/skin/UploadSkin',params,false);
+                var responseRaw = HTTPPost(window.location.origin+'/api/launcher/skin/UploadSkin',params,false);
                 response = JSON.parse(responseRaw);
                 if(response.status == 200){
                     document.getElementById("UploadSkinResult").innerHTML = responseRaw;
@@ -249,6 +252,8 @@
         |        | GET|HEAD | sanctum/csrf-cookie                          |      | Laravel\Sanctum\Http\Controllers\CsrfCookieController@show     | web        | 
         +--------+----------+----------------------------------------------+------+----------------------------------------------------------------+------------+
         </textarea>
+        <br>
+        <h1>Важно! Статусы ошибок JS не кушает, поэтому смотрим консоль, там Console.Log()</h1>
         <br>
         <h1>Контроллер пользователей</h1><br>
         <h3>Default register POST: </h3>
@@ -314,7 +319,7 @@
                 <td><textarea readonly id="visibleData_result"></textarea></td>
             </tr>
         </table>
-        <input type="submit" onclick="test_fetchDataByVisible() value="TEST ME!">
+        <input type="submit" onclick="test_fetchDataByVisible()" value="TEST ME!">
         <hr>
         <h3>KeepAlive</h3>
         <table>
